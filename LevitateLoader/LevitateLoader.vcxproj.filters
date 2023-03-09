@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\DetoursSource\creatwth.cpp" />
+    <ClCompile Include="..\DetoursSource\detours.cpp" />
+    <ClCompile Include="..\DetoursSource\disasm.cpp" />
+    <ClCompile Include="..\DetoursSource\disolarm.cpp" />
+    <ClCompile Include="..\DetoursSource\disolarm64.cpp" />
+    <ClCompile Include="..\DetoursSource\disolia64.cpp" />
+    <ClCompile Include="..\DetoursSource\disolx64.cpp" />
+    <ClCompile Include="..\DetoursSource\disolx86.cpp" />
+    <ClCompile Include="..\DetoursSource\image.cpp" />
+    <ClCompile Include="..\DetoursSource\modules.cpp" />
+    <ClCompile Include="LoaderDllMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\DetoursSource\detours.h" />
+    <ClInclude Include="..\DetoursSource\detver.h" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StartLevitate": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
