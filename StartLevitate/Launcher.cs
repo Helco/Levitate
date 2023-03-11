@@ -7,9 +7,6 @@ namespace Levitate
 {
     internal class Launcher
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern uint ResumeThread(IntPtr hThread);
-
         private static void Main(string[] args)
         {
             STARTUPINFO startupInfo = new()
@@ -32,9 +29,8 @@ namespace Levitate
                 0))
                 throw new Exception("Could not start hover");
 
-            //ResumeThread(processInfo.hThread);
-
-            Console.ReadKey(true);
+            var process = Process.GetProcessById(processInfo.dwProcessId);
+            process.WaitForExit();
         }
     }
 }
