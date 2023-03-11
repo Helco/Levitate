@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Levitate
 {
-    public static class Detours
+    public static unsafe class Detours
     {
+        public static void CheckWin(int error)
+        {
+            if (error == 0)
+                return;
+            throw new Win32Exception(error);
+        }
+
         // This also works with CharSet.Ansi as long as the calling function uses the same character set.
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct STARTUPINFO
@@ -70,5 +78,18 @@ namespace Levitate
             int dllCount,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string[] dlls,
             IntPtr createProcessW);
+
+        [DllImport("Detours", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        public static extern int DetourTransactionBegin();
+
+        [DllImport("Detours", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        public static extern int DetourTransactionAbort();
+
+        [DllImport("Detours", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        public static extern int DetourTransactionCommit();
+
+        [DllImport("Detours", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
+        //public static extern int DetourAttach(nint** ppPointer, nint* pDetour);
+        public static extern int DetourAttach(IntPtr ppPointer, IntPtr pDetour);
     }
 }

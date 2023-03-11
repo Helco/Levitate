@@ -7,13 +7,6 @@ namespace Levitate
 {
     internal class Launcher
     {
-        private static void CheckWin(int error)
-        {
-            if (error == 0)
-                return;
-            throw new Win32Exception(error);
-        }
-
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern uint ResumeThread(IntPtr hThread);
 
