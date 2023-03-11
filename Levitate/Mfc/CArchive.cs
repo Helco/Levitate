@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Levitate.Mfc
 {
@@ -22,8 +17,11 @@ namespace Levitate.Mfc
         [FieldOffset(0x1C)] public byte* cur;
         [FieldOffset(0x20)] public byte* max;
 
-        [Attach(0x00452C38, CallingConvention.ThisCall)]
+        [Attach(0x00452C38)]
         public partial void FillBuffer(uint size);
+
+        [Attach(0x00452A1E)]
+        public partial int Read(byte* buffer, int size);
 
         public void EnsureBuffer(int size)
         {
@@ -60,9 +58,37 @@ namespace Levitate.Mfc
             return ReadInt();
         }
 
-        public static readonly delegate* unmanaged[Stdcall]<CArchive*, int> OrigReadStringLength = (delegate* unmanaged[Stdcall]<CArchive*, int>)0x004526AF;
+        [Attach(0x00452750, CallingConvention.StdCall)]
+        public void ReadString(CString* str)
+        {
+            int length = ReadStringLength();
+            int charSize = 1;
+            if (length == -1)
+            {
+                charSize = 2;
+                length = ReadStringLength();
+            }
 
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-        public static int UnReadStringLength(CArchive* archive) => archive->ReadStringLength();
+            var buffer = str->GetBufferSetLength(length);
+            if (length == 0)
+                return;
+
+            if (Read(buffer, length * charSize) != length * charSize)
+                throw new EndOfStreamException();
+            if (charSize == 1)
+                return;
+
+            str->Data = CString.EmptyData;
+            buffer[length * charSize + 0] = 0; // TODO: looks like a possible out-of-bounds write
+            buffer[length * charSize + 1] = 0;
+            str->SetFromUnicode((char*)buffer);
+            Globals.Delete(buffer);
+        }
+
+        public void Skip(int size)
+        {
+            EnsureBuffer(size);
+            cur += size;
+        }
     }
 }

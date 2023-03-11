@@ -37,7 +37,21 @@ namespace Levitate.SourceGen
 
         private string ProcessClass(GeneratorExecutionContext context, INamedTypeSymbol classSymbol, MethodInfo[] methods)
         {
-            var source = new StringBuilder($@"
+            var source = new StringBuilder();
+
+            var namespaces = methods
+                .SelectMany(m => m.Symbol.Parameters.Select(p => p.Type))
+                .Concat(methods.Select(m => m.Symbol.ReturnType))
+                .Select(t => t is IPointerTypeSymbol pointerType
+                    ? pointerType.PointedAtType
+                    : t)
+                .Select(t => t?.ContainingNamespace?.ToDisplayString())
+                .Distinct()
+                .Except(new[] { null!, "" });
+            foreach (var ns in namespaces)
+                source.AppendLine($"using {ns};");
+
+            source.AppendLine($@"
 namespace {classSymbol.ContainingNamespace.ToDisplayString()}
 {{
     unsafe partial struct {classSymbol.Name}
@@ -87,11 +101,12 @@ namespace {classSymbol.ContainingNamespace.ToDisplayString()}
         private static void AppendParameterList(MethodInfo method, StringBuilder source, bool includeThis)
         {
             source.Append('(');
-            if (includeThis && !method.Symbol.IsStatic)
+            var didHaveThis = includeThis && !method.Symbol.IsStatic;
+            if (didHaveThis)
                 source.Append("pThis");
             foreach (var parameter in method.Symbol.Parameters)
             {
-                if (!SymbolEqualityComparer.Default.Equals(parameter, method.Symbol.Parameters.First()) || !method.Symbol.IsStatic)
+                if (!SymbolEqualityComparer.Default.Equals(parameter, method.Symbol.Parameters.First()) || didHaveThis)
                     source.Append(", ");
                 if (parameter.RefKind == RefKind.Ref)
                     source.Append("ref ");
@@ -106,6 +121,7 @@ namespace {classSymbol.ContainingNamespace.ToDisplayString()}
             {
                 var t when t.Contains("ThisCall") => "System.Runtime.CompilerServices.CallConvThiscall",
                 var t when t.Contains("StdCall") => "System.Runtime.CompilerServices.CallConvStdcall",
+                var t when t.Contains("Cdecl") => "System.Runtime.CompilerServices.CallConvCdecl",
                 _ => "CallConvThiscall" // no need for another diagnostic, we have one already
             };
             source.AppendLine($"        [System.Runtime.InteropServices.UnmanagedCallersOnly(CallConvs = new[] {{ typeof({callConv}) }})]");
@@ -205,6 +221,7 @@ namespace Levitate
                 {
                     var t when t.Contains("ThisCall") => SignatureCallingConvention.ThisCall,
                     var t when t.Contains("StdCall") => SignatureCallingConvention.StdCall,
+                    var t when t.Contains("Cdecl") => SignatureCallingConvention.CDecl,
                     _ => SignatureCallingConvention.Default
                 };
                 if (callConv == SignatureCallingConvention.Default)
