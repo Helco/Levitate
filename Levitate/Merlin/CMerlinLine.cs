@@ -38,16 +38,16 @@ internal unsafe partial struct CMerlinLine
     [Attach(0x004010C0)]
     public void CalcDerivatives()
     {
-        MinX = Math.Min(P0.x, P1.x);
-        MaxX = Math.Max(P0.x, P1.x);
-        MinY = Math.Min(P0.y, P1.y);
-        MaxY = Math.Max(P0.y, P1.y);
+        MinX = Math.Min(P0.X, P1.X);
+        MaxX = Math.Max(P0.X, P1.X);
+        MinY = Math.Min(P0.Y, P1.Y);
+        MaxY = Math.Max(P0.Y, P1.Y);
         Dir = P1 - P0;
         LengthSqr = Dir.LengthSqr;
         Flags =
             (P0 == P1 ? LineFlags.DegradedToPoint : 0) |
-            (Dir.x == 0 ? LineFlags.DegradedWidth : 0) |
-            (Dir.y == 0 ? LineFlags.DegradedHeight : 0);
+            (Dir.X == 0 ? LineFlags.DegradedWidth : 0) |
+            (Dir.Y == 0 ? LineFlags.DegradedHeight : 0);
     }
 
     [Attach(0x00414740)]

@@ -13,44 +13,44 @@ namespace Levitate
         public static readonly IVector2 Up = new IVector2(0, -1);
         public static readonly IVector2 Down = new IVector2(0, 1);
 
-        public readonly int x, y;
+        public readonly int X, Y;
 
         public IVector2(int x, int y)
         {
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         public override bool Equals(object? obj) => (obj is IVector2) ? ((IVector2)obj) == this : false;
 
-        public override int GetHashCode() => HashCode.Combine(x, y);
+        public override int GetHashCode() => HashCode.Combine(X, Y);
 
-        public override string ToString() => $"[{x},{y}]";
+        public override string ToString() => $"[{X},{Y}]";
 
-        public IVector2 WithX(int newX) => new IVector2(newX, y);
-        public IVector2 WithY(int newY) => new IVector2(x, newY);
+        public IVector2 WithX(int newX) => new IVector2(newX, Y);
+        public IVector2 WithY(int newY) => new IVector2(X, newY);
 
-        public static IVector2 operator +(IVector2 a, IVector2 b) => new IVector2(a.x + b.x, a.y + b.y);
-        public static IVector2 operator -(IVector2 a, IVector2 b) => new IVector2(a.x - b.x, a.y - b.y);
-        public static IVector2 operator *(IVector2 a, int s) => new IVector2(a.x * s, a.y * s);
-        public static IVector2 operator /(IVector2 a, int s) => new IVector2(a.x / s, a.y / s);
-        public static IVector2 operator *(IVector2 a, IVector2 b) => new IVector2(a.x * b.x, a.y * b.y);
-        public static IVector2 operator /(IVector2 a, IVector2 b) => new IVector2(a.x / b.x, a.y / b.y);
-        public static bool operator ==(IVector2 a, IVector2 b) => a.x == b.x && a.y == b.y;
-        public static bool operator !=(IVector2 a, IVector2 b) => a.x != b.x || a.y != b.y;
+        public static IVector2 operator +(IVector2 a, IVector2 b) => new IVector2(a.X + b.X, a.Y + b.Y);
+        public static IVector2 operator -(IVector2 a, IVector2 b) => new IVector2(a.X - b.X, a.Y - b.Y);
+        public static IVector2 operator *(IVector2 a, int s) => new IVector2(a.X * s, a.Y * s);
+        public static IVector2 operator /(IVector2 a, int s) => new IVector2(a.X / s, a.Y / s);
+        public static IVector2 operator *(IVector2 a, IVector2 b) => new IVector2(a.X * b.X, a.Y * b.Y);
+        public static IVector2 operator /(IVector2 a, IVector2 b) => new IVector2(a.X / b.X, a.Y / b.Y);
+        public static bool operator ==(IVector2 a, IVector2 b) => a.X == b.X && a.Y == b.Y;
+        public static bool operator !=(IVector2 a, IVector2 b) => a.X != b.X || a.Y != b.Y;
 
-        public IVector2 Normalized => this / GreatestCommonDivisor(x, y);
-        public int Dot(IVector2 a) => x * a.x + y * a.y;
+        public IVector2 Normalized => this / GreatestCommonDivisor(X, Y);
+        public int Dot(IVector2 a) => X * a.X + Y * a.Y;
         public int LengthSqr => Dot(this);
         public int Length => (int)Math.Sqrt(LengthSqr);
-        public int LengthManhattan => Math.Abs(x) + Math.Abs(y);
+        public int LengthManhattan => Math.Abs(X) + Math.Abs(Y);
 
         // starting up and going clockwise
-        public double Angle => Math.Atan2(x, -y);
+        public double Angle => Math.Atan2(X, -Y);
         public double AngleTo(IVector2 a) => (a - this).Angle;
 
-        public IVector2 LeftOrthogonal => new IVector2(y, -x);
-        public IVector2 RightOrthogonal => new IVector2(-y, x);
+        public IVector2 LeftOrthogonal => new IVector2(Y, -X);
+        public IVector2 RightOrthogonal => new IVector2(-Y, X);
         public IVector2 Rotate90(int degrees)
         {
             if (degrees % 90 != 0)
