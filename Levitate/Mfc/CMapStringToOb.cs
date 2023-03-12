@@ -5,7 +5,10 @@ namespace Levitate.Mfc;
 internal unsafe partial struct CMapStringToOb
 {
     [Attach(0x00449F9B)]
-    public partial CObject** Lookup(byte* key);
+    public partial CObject** GetOrCreate(byte* key);
 
-    public CObject** Lookup(CString* key) => Lookup(key->Data);
+    [Attach(0x00449F6E)]
+    public partial bool TryGetValue(byte* key, CObject** value);
+
+    public CObject** GetOrCreate(CString* key) => GetOrCreate(key->Data);
 }

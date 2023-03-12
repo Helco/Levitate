@@ -39,7 +39,7 @@ internal unsafe partial struct CMerlinLocation
         {
             if (@base.Name.Length > 0)
                 fixed (CMerlinLocation* pThis = &this)
-                    *ByName->Lookup(@base.Name.Data) = (CObject*)pThis;
+                    *ByName->GetOrCreate(@base.Name.Data) = (CObject*)pThis;
             X = arc->ReadShort();
             Y = arc->ReadShort();
             Rotation = arc->ReadShort();

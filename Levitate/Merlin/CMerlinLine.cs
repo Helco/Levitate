@@ -35,6 +35,17 @@ internal unsafe partial struct CMerlinLine
         fixed (CMerlinLine* pThis = &this) return pThis;
     }
 
+    [Attach(0x00401160)]
+    public CMerlinLine* CtorEmpty() => Ctor(0, 0, 0, 0);
+
+    [Attach(0x0042A550, CallingConvention.StdCall)]
+    public static CMerlinLine* Create(CMerlinLine* line)
+    {
+        if (line != null)
+            line->CtorEmpty();
+        return line;
+    }
+
     [Attach(0x004010C0)]
     public void CalcDerivatives()
     {
