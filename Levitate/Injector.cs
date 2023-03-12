@@ -3,29 +3,28 @@ using System.Runtime.InteropServices;
 using Levitate.Mfc;
 using static Levitate.Detours;
 
-namespace Levitate
+namespace Levitate;
+
+[AttributeUsage(AttributeTargets.Method)]
+public class AttachAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method)]
-    public class AttachAttribute : Attribute
+    public AttachAttribute(uint address, CallingConvention callConv = CallingConvention.ThisCall)
     {
-        public AttachAttribute(uint address, CallingConvention callConv = CallingConvention.ThisCall)
-        {
-            Address = address;
-        }
-
-        public uint Address { get; }
-        public CallingConvention CallConv { get; }
+        Address = address;
     }
 
-    public static unsafe partial class Injector
-    {
-        public static int Inject(IntPtr argPtr, int argLen)
-        {
-            AttachAllMethods();
-            Debug.WriteLine("Injected levitation");
-            return 0;
-        }
+    public uint Address { get; }
+    public CallingConvention CallConv { get; }
+}
 
-        private static partial void AttachAllMethods();
+public static unsafe partial class Injector
+{
+    public static int Inject(IntPtr argPtr, int argLen)
+    {
+        AttachAllMethods();
+        Debug.WriteLine("Injected levitation");
+        return 0;
     }
+
+    private static partial void AttachAllMethods();
 }
