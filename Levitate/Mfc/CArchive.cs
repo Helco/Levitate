@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace Levitate.Mfc
 {
+    [Flags]
+    internal enum ArchiveMode : uint
+    {
+        Load = 1
+    }
+
     [StructLayout(LayoutKind.Explicit)]
     internal unsafe partial struct CArchive
     {
-        [Flags]
-        public enum Mode : uint
-        {
-            Load = 1
-        }
-
-        [FieldOffset(0xC)] public Mode mode;
-        [FieldOffset(0x1C)] public byte* cur;
-        [FieldOffset(0x20)] public byte* max;
+        [FieldOffset(0xC)] public ArchiveMode Mode;
+        [FieldOffset(0x1C)] public byte* Cur;
+        [FieldOffset(0x20)] public byte* Max;
 
         [Attach(0x00452C38)]
         public partial void FillBuffer(uint size);
@@ -25,20 +24,21 @@ namespace Levitate.Mfc
 
         public void EnsureBuffer(int size)
         {
-            if (cur + size > max)
-                FillBuffer((uint)(cur + size - max));
+            if (Cur + size > Max)
+                FillBuffer((uint)(Cur + size - Max));
         }
 
         public byte ReadByte() => ReadBlit<byte>();
+        public short ReadShort() => ReadBlit<short>();
         public ushort ReadUShort() => ReadBlit<ushort>();
-        public uint ReadUInt() => ReadBlit<uint>();
         public int ReadInt() => ReadBlit<int>();
+        public uint ReadUInt() => ReadBlit<uint>();
 
         public T ReadBlit<T>() where T : unmanaged
         {
             EnsureBuffer(sizeof(T));
-            T value = *(T*)cur;
-            cur += sizeof(T);
+            T value = *(T*)Cur;
+            Cur += sizeof(T);
             return value;
         }
 
@@ -88,7 +88,7 @@ namespace Levitate.Mfc
         public void Skip(int size)
         {
             EnsureBuffer(size);
-            cur += size;
+            Cur += size;
         }
     }
 }

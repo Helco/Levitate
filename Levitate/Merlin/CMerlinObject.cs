@@ -17,7 +17,7 @@ namespace Levitate.Merlin
         public static readonly VTable* VirtualTable = (VTable*)0x4BD808;
 
         public VTable* VtPtr;
-        public Mfc.CString Name;
+        public CString Name;
         public int unknown;
 
         [Attach(0x401030)]
@@ -32,7 +32,7 @@ namespace Levitate.Merlin
         [Attach(0x00411B10)]
         public void Serialize(CArchive* archive)
         {
-            if (archive->mode.HasFlag(CArchive.Mode.Load))
+            if (archive->Mode.HasFlag(ArchiveMode.Load))
             {
                 fixed (CMerlinObject* pThis = &this)
                     archive->ReadString(&pThis->Name);

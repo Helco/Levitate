@@ -155,6 +155,10 @@ namespace {classSymbol.ContainingNamespace.ToDisplayString()}
 
         private string ProcessInjector(GeneratorExecutionContext context, IEnumerable<MethodInfo> methods)
         {
+            // the function pointer variables have to be kept alive
+            // so we commit the transaction in AttachAllMethods as well
+            // otherwise the pointers used are invalidated after AttachAllMethods returns
+
             var source = new StringBuilder(@"
 using static Levitate.Detours;
 
@@ -164,12 +168,15 @@ namespace Levitate
     {
         private static partial void AttachAllMethods()
         {
+            CheckWin(DetourTransactionBegin());
 ");
+
 
             int i = 0;
             foreach (var method in methods)
                 ProcessMethodAttach(context, method, source, i++);
 
+            source.AppendLine("            CheckWin(DetourTransactionCommit());");
             source.AppendLine("        }");
             source.AppendLine("    }");
             source.AppendLine("}");

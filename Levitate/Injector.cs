@@ -21,9 +21,7 @@ namespace Levitate
     {
         public static int Inject(IntPtr argPtr, int argLen)
         {
-            CheckWin(DetourTransactionBegin());
             AttachAllMethods();
-            CheckWin(DetourTransactionCommit());
             Debug.WriteLine("Injected levitation");
             return 0;
         }
