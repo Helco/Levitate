@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Levitate.Mfc;
 
@@ -12,47 +13,48 @@ internal unsafe partial struct CMerlinStatic
 
     public CMerlinLine @base;
     public CString
-        texNameLT,
-        texNameRT,
-        texNameLW,
-        texNameRW,
-        texNameLB,
-        texNameRB;
+        TexNameLT,
+        TexNameRT,
+        TexNameLW,
+        TexNameRW,
+        TexNameLB,
+        TexNameRB;
     public CMerlinTexture*
-        textureLT,
-        textureRT,
-        textureLW,
-        textureRW,
-        textureLB,
-        textureRB;
-    public short bottomZ, topZ;
+        TextureLT,
+        TextureRT,
+        TextureLW,
+        TextureRW,
+        TextureLB,
+        TextureRB;
+    public short BottomZ, TopZ;
     public short unk1, unk2;
     public int unk3;
-    public bool texLWIsTransparent, texRWIsTransparent;
-    public short leftTexOffset, rightTexOffset;
-    public bool isSolid;
-    public bool unkFlag;
+    public uint TexLWIsTransparent, TexRWIsTransparent;
+    public short LeftTexOffset, RightTexOffset;
+    public uint IsSolid;
+    public uint unkFlag;
 
     [Attach(0x00419B30)]
     public CMerlinStatic* Ctor()
     {
         @base.CtorEmpty();
         @base.@base.VtPtr = VirtualTable;
-        texNameLT.Ctor();
-        texNameRT.Ctor();
-        texNameLW.Ctor();
-        texNameRW.Ctor();
-        texNameLB.Ctor();
-        texNameRB.Ctor();
-        texLWIsTransparent = false;
-        texRWIsTransparent = false;
-        leftTexOffset = rightTexOffset = 0;
-        bottomZ = 0;
-        topZ = 128;
+        TexNameLT.Ctor();
+        TexNameRT.Ctor();
+        TexNameLW.Ctor();
+        TexNameRW.Ctor();
+        TexNameLB.Ctor();
+        TexNameRB.Ctor();
+        TextureLT = TextureRT = TextureLW = TextureRW = TextureLB = TextureRB = null;
+        TexLWIsTransparent = 0;
+        TexRWIsTransparent = 0;
+        LeftTexOffset = RightTexOffset = 0;
+        BottomZ = 0;
+        TopZ = 128;
         unk1 = unk2 = 0;
         unk3 = 0;
-        isSolid = true;
-        unkFlag = false;
+        IsSolid = 1;
+        unkFlag = 0;
         fixed (CMerlinStatic* pThis = &this) return pThis;
     }
 
@@ -75,29 +77,29 @@ internal unsafe partial struct CMerlinStatic
                 if (@base.@base.Name.Length > 0)
                     *ByName->GetOrCreate(@base.@base.Name.Data) = (CObject*)pThis;
 
-                LoadTexture(arc, &pThis->texNameLT, &pThis->textureLT);
-                LoadTexture(arc, &pThis->texNameLT, &pThis->textureRT);
-                LoadTexture(arc, &pThis->texNameLW, &pThis->textureLW);
-                LoadTexture(arc, &pThis->texNameLW, &pThis->textureRW);
-                LoadTexture(arc, &pThis->texNameLB, &pThis->textureLB);
-                LoadTexture(arc, &pThis->texNameLB, &pThis->textureRB);
+                LoadTexture(arc, &pThis->TexNameLT, &pThis->TextureLT);
+                LoadTexture(arc, &pThis->TexNameRT, &pThis->TextureRT);
+                LoadTexture(arc, &pThis->TexNameLW, &pThis->TextureLW);
+                LoadTexture(arc, &pThis->TexNameRW, &pThis->TextureRW);
+                LoadTexture(arc, &pThis->TexNameLB, &pThis->TextureLB);
+                LoadTexture(arc, &pThis->TexNameRB, &pThis->TextureRB);
             }
 
-            bottomZ = arc->ReadShort();
-            topZ = arc->ReadShort();
+            BottomZ = arc->ReadShort();
+            TopZ = arc->ReadShort();
             unk1 = arc->ReadShort();
             unk2 = arc->ReadShort();
-            texLWIsTransparent = arc->ReadByte() != 0;
-            texRWIsTransparent = arc->ReadByte() != 0;
-            isSolid = arc->ReadByte() != 0;
+            TexLWIsTransparent = arc->ReadByte();
+            TexRWIsTransparent = arc->ReadByte();
+            IsSolid = arc->ReadByte();
 
             var skipBytes = arc->ReadUShort();
             if (skipBytes >= 5)
             {
                 skipBytes -= 5;
-                unkFlag = arc->ReadByte() != 0;
-                leftTexOffset = arc->ReadShort();
-                rightTexOffset = arc->ReadShort();
+                unkFlag = arc->ReadByte();
+                LeftTexOffset = arc->ReadShort();
+                RightTexOffset = arc->ReadShort();
             }
             arc->Skip(skipBytes);
         }
@@ -108,8 +110,8 @@ internal unsafe partial struct CMerlinStatic
     private static void LoadTexture(CArchive* arc, CString* texName, CMerlinTexture** texture)
     {
         arc->ReadString(texName);
-        if (texName->Length == 0 ||
-            !CMerlinTexture.ByName->TryGetValue(texName->Data, (CObject**)texture))
-            *texture = null;
+        *texture = null;
+        if (texName->Length != 0)
+            CMerlinTexture.ByName->TryGetValue(texName->Data, (CObject**)texture);
     }
 }
