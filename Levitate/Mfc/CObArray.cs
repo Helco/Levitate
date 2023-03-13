@@ -12,6 +12,21 @@ internal unsafe partial struct CObArray
 
     [Attach(0x004494CC)]
     public partial CObArray* Ctor();
+
+    [Attach(0x00449598)]
+    public partial void SetSize(int size, int growBy);
+    public void SetSize(int size) => SetSize(size, -1);
+
+    [Attach(0x00449724)]
+    public void Serialize(CArchive* arc)
+    {
+        if (!arc->Mode.HasFlag(ArchiveMode.Load))
+            throw new NotImplementedException();
+
+        SetSize(arc->ReadUShort());
+        for (int i = 0; i < Size; i++)
+            Data[i] = arc->ReadObject();
+    }
 }
 
 #pragma warning disable CS9084 // Struct member returns 'this' or other instance members by reference
@@ -24,5 +39,8 @@ internal unsafe struct CObArray<T> where T : unmanaged
     public ref int Capacity => ref Raw.Capacity;
 
     public void Ctor() => Raw.Ctor();
+    public void SetSize(int size, int growBy = -1) => Raw.SetSize(size, growBy);
+
+    public void Serialize(CArchive* arc) => Raw.Serialize(arc);
 }
 #pragma warning restore CS9084 // Struct member returns 'this' or other instance members by reference

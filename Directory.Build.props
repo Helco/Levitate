@@ -3,5 +3,6 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>NU1605;nullable</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 </Project>
