@@ -7,7 +7,7 @@ namespace Levitate.Merlin;
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal unsafe partial struct CMerlinTexture
 {
-    public static readonly CMerlinObject.VTable* VirtualTable = (CMerlinObject.VTable*)0x004BBD20;
+    public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BBD20;
     public static readonly CMapStringToOb* ByName = (CMapStringToOb*)0x004A1D30;
     public static readonly CObArray* UnusedArray = (CObArray*)0x004A1D08;
     public static readonly int* AliveCount = (int*)0x004C4DA0;

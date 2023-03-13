@@ -7,7 +7,7 @@ namespace Levitate.Merlin;
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal unsafe partial struct CMerlinBSP
 {
-    public static readonly CMerlinObject.VTable* VirtualTable = (CMerlinObject.VTable*)0x004BD438;
+    public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BD438;
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public unsafe record struct Inner(int unk1, float unk2)

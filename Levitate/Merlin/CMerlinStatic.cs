@@ -8,7 +8,7 @@ namespace Levitate.Merlin;
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal unsafe partial struct CMerlinStatic
 {
-    public static readonly CMerlinObject.VTable* VirtualTable = (CMerlinObject.VTable*)0x004BC078;
+    public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BC078;
     public static readonly CMapStringToOb* ByName = (CMapStringToOb*)0x004A4578;
 
     public CMerlinLine @base;

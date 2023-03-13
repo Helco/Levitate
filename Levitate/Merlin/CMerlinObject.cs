@@ -7,16 +7,9 @@ namespace Levitate.Merlin;
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal unsafe partial struct CMerlinObject
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public unsafe struct VTable
-    {
-        IntPtr GetRuntimeClass;
-        IntPtr Dtor;
-        IntPtr Serialize;
-    }
-    public static readonly VTable* VirtualTable = (VTable*)0x4BD808;
+    public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x4BD808;
 
-    public VTable* VtPtr;
+    public CObject.VTable* VtPtr;
     public CString Name;
     public int unknown;
 

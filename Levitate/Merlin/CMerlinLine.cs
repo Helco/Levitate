@@ -15,7 +15,7 @@ internal enum LineFlags : uint
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
 internal unsafe partial struct CMerlinLine
 {
-    public static readonly CMerlinObject.VTable* VirtualTable = (CMerlinObject.VTable*)0x4BC110;
+    public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x4BC110;
 
     public CMerlinObject @base;
     public IVector2 P0, P1;
