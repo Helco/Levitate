@@ -8,8 +8,8 @@ namespace Levitate.Merlin;
 internal unsafe partial struct CMerlinTexture
 {
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BBD20;
-    public static readonly CMapStringToOb* ByName = (CMapStringToOb*)0x004A1D30;
-    public static readonly CObArray* UnusedArray = (CObArray*)0x004A1D08;
+    public static readonly CMapStringToOb<CMerlinTexture>* ByName = (CMapStringToOb<CMerlinTexture>*)0x004A1D30;
+    public static readonly CObArray<CMerlinTexture>* UnusedArray = (CObArray<CMerlinTexture>*)0x004A1D08;
     public static readonly int* AliveCount = (int*)0x004C4DA0;
     public static readonly byte** FixedMemoryCur = (byte**)0x00461D00;
 
@@ -118,8 +118,7 @@ internal unsafe partial struct CMerlinTexture
         if (!arc->Mode.HasFlag(ArchiveMode.Load))
             throw new NotImplementedException();
 
-        fixed (CMerlinTexture* pThis = &this)
-            *ByName->GetOrCreate(@base.Name.Data) = (CObject*)pThis;
+        ByName->Set(@base.Name, this);
 
         IsTransparent = arc->ReadUShort();
         MipmapCount = arc->ReadUShort();

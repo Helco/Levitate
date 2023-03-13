@@ -20,9 +20,9 @@ internal unsafe partial struct CMerlinBSP
     }
 
     public CMerlinLine @base;
-    public short id, staticIndex, leftBsp, rightBsp;
+    public short Id, StaticIndex, LeftBsp, RightBsp;
     public int unk_4C;
-    public Inner inner1, inner2;
+    public Inner Inner1, Inner2;
     public int unk_60;
     public int unk_64;
 
@@ -30,9 +30,9 @@ internal unsafe partial struct CMerlinBSP
     {
         @base.CtorEmpty();
         @base.@base.VtPtr = VirtualTable;
-        id = staticIndex = leftBsp = rightBsp = -1;
-        inner1 = new(0, 0);
-        inner2 = new(0, 1.875f);
+        Id = StaticIndex = LeftBsp = RightBsp = -1;
+        Inner1 = new(0, 0);
+        Inner2 = new(0, 1.875f);
         unk_4C = unk_60 = unk_64 = 0;
     }
 
@@ -50,14 +50,14 @@ internal unsafe partial struct CMerlinBSP
         @base.Serialize(arc);
         if (!arc->Mode.HasFlag(ArchiveMode.Load))
             throw new NotImplementedException();
-        id = arc->ReadShort();
-        staticIndex = arc->ReadShort();
-        leftBsp = arc->ReadShort();
-        rightBsp = arc->ReadShort();
+        Id = arc->ReadShort();
+        StaticIndex = arc->ReadShort();
+        LeftBsp = arc->ReadShort();
+        RightBsp = arc->ReadShort();
         unk_60 = arc->ReadUShort();
 
-        inner1.Read(arc);
-        inner2.Read(arc);
+        Inner1.Read(arc);
+        Inner2.Read(arc);
 
         arc->Skip(arc->ReadUShort());
     }

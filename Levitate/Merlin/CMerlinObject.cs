@@ -27,8 +27,7 @@ internal unsafe partial struct CMerlinObject
     {
         if (archive->Mode.HasFlag(ArchiveMode.Load))
         {
-            fixed (CMerlinObject* pThis = &this)
-                archive->ReadString(&pThis->Name);
+            archive->ReadString(out Name);
             archive->Skip(archive->ReadUShort());
         }
         else

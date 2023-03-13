@@ -8,7 +8,7 @@ namespace Levitate.Merlin;
 internal unsafe partial struct CMerlinLocation
 {
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BD3C0;
-    public static readonly CMapStringToOb* ByName = (CMapStringToOb*)0x004A4768;
+    public static readonly CMapStringToOb<CMerlinLocation>* ByName = (CMapStringToOb<CMerlinLocation>*)0x004A4768;
 
     public CMerlinObject @base;
     public short X, Y;
@@ -38,8 +38,7 @@ internal unsafe partial struct CMerlinLocation
         if (arc->Mode.HasFlag(ArchiveMode.Load))
         {
             if (@base.Name.Length > 0)
-                fixed (CMerlinLocation* pThis = &this)
-                    *ByName->GetOrCreate(@base.Name.Data) = (CObject*)pThis;
+                ByName->Set(@base.Name, this);
             X = arc->ReadShort();
             Y = arc->ReadShort();
             Rotation = arc->ReadShort();

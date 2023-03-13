@@ -27,3 +27,5 @@ internal unsafe partial struct CPtrArray
     public partial void InsertAt(int atIndex, IntPtr ptr, int repeatCount);
     public void InsertAt(int atIndex, IntPtr ptr) => InsertAt(atIndex, ptr, 1);
 }
+
+// no type-safe variant as CObArray would have been used instead of CPtrArray originally

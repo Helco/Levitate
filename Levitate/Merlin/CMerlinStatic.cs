@@ -9,7 +9,7 @@ namespace Levitate.Merlin;
 internal unsafe partial struct CMerlinStatic
 {
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BC078;
-    public static readonly CMapStringToOb* ByName = (CMapStringToOb*)0x004A4578;
+    public static readonly CMapStringToOb<CMerlinStatic>* ByName = (CMapStringToOb<CMerlinStatic>*)0x004A4578;
 
     public CMerlinLine @base;
     public CString
@@ -72,18 +72,15 @@ internal unsafe partial struct CMerlinStatic
         @base.Serialize(arc);
         if (arc->Mode.HasFlag(ArchiveMode.Load))
         {
-            fixed (CMerlinStatic* pThis = &this)
-            {
-                if (@base.@base.Name.Length > 0)
-                    *ByName->GetOrCreate(@base.@base.Name.Data) = (CObject*)pThis;
+            if (@base.@base.Name.Length > 0)
+                ByName->Set(@base.@base.Name, this);
 
-                LoadTexture(arc, &pThis->TexNameLT, &pThis->TextureLT);
-                LoadTexture(arc, &pThis->TexNameRT, &pThis->TextureRT);
-                LoadTexture(arc, &pThis->TexNameLW, &pThis->TextureLW);
-                LoadTexture(arc, &pThis->TexNameRW, &pThis->TextureRW);
-                LoadTexture(arc, &pThis->TexNameLB, &pThis->TextureLB);
-                LoadTexture(arc, &pThis->TexNameRB, &pThis->TextureRB);
-            }
+            LoadTexture(arc, ref TexNameLT, out TextureLT);
+            LoadTexture(arc, ref TexNameRT, out TextureRT);
+            LoadTexture(arc, ref TexNameLW, out TextureLW);
+            LoadTexture(arc, ref TexNameRW, out TextureRW);
+            LoadTexture(arc, ref TexNameLB, out TextureLB);
+            LoadTexture(arc, ref TexNameRB, out TextureRB);
 
             BottomZ = arc->ReadShort();
             TopZ = arc->ReadShort();
@@ -107,11 +104,11 @@ internal unsafe partial struct CMerlinStatic
             throw new NotImplementedException();
     }
 
-    private static void LoadTexture(CArchive* arc, CString* texName, CMerlinTexture** texture)
+    private static void LoadTexture(CArchive* arc, ref CString texName, out CMerlinTexture* texture)
     {
-        arc->ReadString(texName);
-        *texture = null;
-        if (texName->Length != 0)
-            CMerlinTexture.ByName->TryGetValue(texName->Data, (CObject**)texture);
+        arc->ReadString(out texName);
+        texture = null;
+        if (texName.Length != 0)
+            CMerlinTexture.ByName->TryGetValue(texName, out texture);
     }
 }

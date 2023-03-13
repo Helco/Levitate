@@ -86,6 +86,12 @@ internal unsafe partial struct CArchive
         Globals.Delete(buffer);
     }
 
+    public void ReadString(out CString str)
+    {
+        fixed (CString* strPtr = &str)
+            ReadString(strPtr);
+    }
+
     public void Skip(int size)
     {
         EnsureBuffer(size);
