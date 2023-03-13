@@ -33,6 +33,7 @@ internal unsafe partial struct CArchive
     public ushort ReadUShort() => ReadBlit<ushort>();
     public int ReadInt() => ReadBlit<int>();
     public uint ReadUInt() => ReadBlit<uint>();
+    public float ReadFloat() => ReadBlit<float>();
 
     public T ReadBlit<T>() where T : unmanaged
     {
