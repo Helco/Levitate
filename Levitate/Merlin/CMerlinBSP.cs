@@ -5,8 +5,9 @@ using Levitate.Mfc;
 namespace Levitate.Merlin;
 
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-internal unsafe partial struct CMerlinBSP
+internal unsafe partial struct CMerlinBSP : IRuntimeObject
 {
+    public static CRuntimeClass* RuntimeClass => (CRuntimeClass*)0x004C5660;
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BD438;
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

@@ -8,8 +8,9 @@ namespace Levitate.Merlin;
 // does not occur in the original mazes
 
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-internal unsafe partial struct CMerlinDynamic
+internal unsafe partial struct CMerlinDynamic : IRuntimeObject
 {
+    public static CRuntimeClass* RuntimeClass => (CRuntimeClass*)0x004C5608;
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BD348;
     public static readonly CMapStringToOb<CMerlinDynamic>* ByName = (CMapStringToOb<CMerlinDynamic>*)0x004A4728;
 

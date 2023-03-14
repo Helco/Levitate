@@ -5,8 +5,9 @@ using Levitate.Mfc;
 namespace Levitate.Merlin;
 
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-internal unsafe partial struct CMerlinLocation
+internal unsafe partial struct CMerlinLocation : IRuntimeObject
 {
+    public static CRuntimeClass* RuntimeClass => (CRuntimeClass*)0x004C5638;
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BD3C0;
     public static readonly CMapStringToOb<CMerlinLocation>* ByName = (CMapStringToOb<CMerlinLocation>*)0x004A4768;
 

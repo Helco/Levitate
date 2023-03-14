@@ -5,8 +5,9 @@ using Levitate.Mfc;
 namespace Levitate.Merlin;
 
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-internal unsafe partial struct CMerlinTexture
+internal unsafe partial struct CMerlinTexture : IRuntimeObject
 {
+    public static CRuntimeClass* RuntimeClass => (CRuntimeClass*)0x004C51B0;
     public static readonly CObject.VTable* VirtualTable = (CObject.VTable*)0x004BBD20;
     public static readonly CMapStringToOb<CMerlinTexture>* ByName = (CMapStringToOb<CMerlinTexture>*)0x004A1D30;
     public static readonly CObArray<CMerlinTexture>* UnusedArray = (CObArray<CMerlinTexture>*)0x004A1D08;
