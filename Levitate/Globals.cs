@@ -13,10 +13,10 @@ internal unsafe partial struct Globals
 
     [Attach(0x0043E2CF, CallingConvention.Cdecl)]
     public static partial byte* New(int size);
-    public static T* New<T>() where T : unmanaged => (T*)New(sizeof(T));
+    public static T* New<T>(int count = 1) where T : unmanaged => (T*)New(sizeof(T) * count);
 
     [Attach(0x0043E34A, CallingConvention.Cdecl)]
-    public static partial void Delete(byte* mem);
+    public static partial void Delete(void* mem);
 
     [Attach(0x00448A3C, CallingConvention.Cdecl)]
     public static partial void ThrowNoMfcObjectAlloc();
